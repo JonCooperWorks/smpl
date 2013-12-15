@@ -1,0 +1,310 @@
+package smpl.syntax;
+
+import java_cup.runtime.*;
+import java.io.*;
+import java.util.*;
+
+/* Preliminaries to set up and use the scanner.  */
+parser code {:
+		SMPLLexer lexer;
+
+		public SMPLParser(SMPLLexer l) {
+		    // As of CUP v0.11, need to pass Lexer to superclass
+		    super(l);
+		    lexer = l;
+		}
+
+		public void report_error(String message, Object info) {
+		    System.err.println(message + info);
+		}
+
+		public void syntax_error(Symbol cur_token) {
+		    report_error("Syntax error on line " + lexer.getLine() +
+				     " at char " + lexer.getChar() + ": ",
+				 "Token " + cur_token +
+				 "(" + lexer.getText() + ")");
+		    //		    System.err.print("Line " + lexer.getLine() +
+		    //				     " near char " + lexer.getChar() + ": ");
+		    //		    System.err.println ("Last token read is " +
+		    //					 lexer.getText());
+		}
+	    :};
+
+init with {:
+	  :};
+scan with {:
+		try {
+		    return lexer.next_token();
+		} catch (java.io.IOException ioe) {
+		    System.out.println ("Unrecognised token");
+		    System.out.println(ioe.getMessage());
+		    throw ioe;
+		}
+	  :};
+
+/* Terminals (tokens returned by the scanner). */
+
+// special symbols
+terminal LIT_LBRACKET, LIT_RBRACKET, LIT_LVBRACKET, LIT_RVBRACKET, LIT_LPAREN, LIT_RPAREN,
+            LIT_LBRACE, LIT_RBRACE, LIT_COLON, LIT_SEMI_COLON, LIT_COMMA,
+            LIT_ASSIGN, LIT_DOT;
+
+// arithmetic operators
+terminal LIT_ADD, LIT_MINUS, LIT_MULTIPLY, LIT_DIVIDE, LIT_MODULUS;
+
+// bitwise operators
+terminal LIT_BIT_AND, LIT_BIT_OR, LIT_BIT_COMP;
+
+// relational operators
+terminal LIT_REL_EQ, LIT_REL_GT, LIT_REL_LT, LIT_REL_GTEQ, LIT_REL_LTEQ, LIT_REL_NOT_EQ;
+
+// bitwise operators
+terminal LIT_LOGIC_AND, LIT_LOGIC_OR, LIT_LOGIC_NOT;
+
+// other operators
+terminal LIT_CONCAT;
+
+// special keywords
+terminal KW_TRUE, KW_FALSE, KW_EMPTY_LIST, KW_PROC, KW_CALL, KW_LAZY, KW_LET, KW_DEF, KW_IF,
+			KW_THEN, KW_ELSE, KW_CASE, KW_PRINT, KW_PRINT_LN, KW_READ, KW_READ_INT, KW_BE,
+			KW_DYNAMIC, KW_REF;
+
+// terminals with values
+terminal String STRING;
+terminal String CHARACTER;
+terminal String HEX_CHARACTER;
+terminal String IDENTIFIER;
+terminal String INTEGER;
+terminal String DOUBLE;
+
+
+// fill in all other terminals and non-terminals here
+non terminal ASTBooleanConstantExpression boolean;
+non terminal ASTString string;
+non terminal ASTCharacter character;
+non terminal ASTIdentifier identifier;
+non terminal ASTIdentifier identifier2;
+non terminal ASTInteger integer;
+non terminal ASTDouble double;
+
+non terminal ASTProgram program;
+non terminal ASTStatementSequence stmtList;
+non terminal ASTExpression stmt;
+non terminal ASTExpression stmt2;
+non terminal ASTExpression nonIfStmt;
+non terminal ASTExpression ifThenExp;
+non terminal ASTExpression ifThenElseExp;
+non terminal ASTExpression procExpression;
+non terminal ASTCaseClauseList caseClauseList;
+non terminal ASTCaseExpression caseExp;
+non terminal ASTCaseClasue caseClause;
+non terminal ASTExpression expression;
+non terminal ASTExpression expression2;
+non terminal ASTDynamicBindingsExpression dynamicBindings;
+non terminal ASTLetAliasDefinitionExpansionExpression letExp;
+non terminal ASTAliasDefinitionList aliasBindingList;
+non terminal ASTAliasDefinition aliasBinding;
+non terminal ASTLazyEvaluationExpression lazyExp;
+non terminal ASTListCreationExpression listDefn;
+non terminal ASTVectorCreationExpression vectorDefn;
+non terminal ASTExpressionList expressionList;
+non terminal ASTVectorComprehensionExpression vectorComprehension;
+non terminal ASTExpression vectorIndex;
+non terminal ASTExpression procedureDefn;
+non terminal ASTIdentifierList identifierList;
+non terminal ASTCallProcedureExpression procedureCall;
+non terminal ASTArgumentList argList;
+non terminal ASTSpecialCallProcedureExpression procedureSpecialCall;
+non terminal ASTAliasDefinition aliasDefn;
+non terminal ASTMultipleAliasAssignment aliasAssign;
+non terminal ASTExpression logicalOrExp;
+non terminal ASTExpression logicalAndExp;
+non terminal ASTExpression logicalNotExp;
+non terminal ASTExpression relationalExp;
+non terminal ASTExpression bitwiseExp;
+non terminal ASTExpression arithExp;
+non terminal ASTExpression arithTerm;
+non terminal ASTExpression arithComplement;
+non terminal ASTExpression arithFactor;
+
+non terminal empty;
+
+/* Grammar rules */
+program ::= stmtList:s {: RESULT = new ASTProgram(s); :};
+
+stmtList ::= stmtList:seq stmt:s {: RESULT = seq.add(s); :}
+                 | stmt:s {: RESULT = new ASTStatementSequence(s); :};
+
+
+stmt ::= aliasDefn:e LIT_SEMI_COLON {: RESULT = e; :} |
+		aliasAssign:e LIT_SEMI_COLON {: RESULT = e; :}|
+		dynamicBindings:e LIT_SEMI_COLON {: RESULT = e; :} |
+		stmt2:e LIT_SEMI_COLON {: RESULT = e; :};
+		
+stmt2 ::= ifThenExp:i  {: RESULT = i; :} |
+		nonIfStmt:s {: RESULT = s; :};
+		
+ifThenExp ::= KW_IF expression2:e KW_THEN stmt2:c LIT_SEMI_COLON
+					{: RESULT = new ASTIfThenElseExpression(e, c); :} |
+				KW_IF expression2:e KW_THEN stmt2:c KW_ELSE stmt2:e2 LIT_SEMI_COLON
+					{: RESULT = new ASTIfThenElseExpression(e, c, e2); :};
+				
+
+nonIfStmt ::= expression:e  {: RESULT = e; :};
+				
+
+dynamicBindings ::= KW_DYNAMIC identifierList:l 
+				{: RESULT = new ASTDynamicBindingsExpression(l); :};
+
+caseExp ::= KW_CASE LIT_LBRACE caseClauseList:l LIT_RBRACE
+				{: RESULT = new ASTCaseExpression(l); :};
+				
+caseClauseList ::= caseClauseList:l LIT_COMMA caseClause:e {: RESULT = l; l.add(e); :} |
+				caseClause:e {: RESULT = new ASTCaseClauseList(e); :};
+				
+caseClause ::= expression:e LIT_COLON expression:e2
+			{: RESULT = new ASTCaseClasue(e, e2); :};
+
+caseClause ::= KW_ELSE  LIT_COLON expression:e2 
+			{: RESULT = new ASTCaseClasue(new ASTBooleanConstantExpression(true), e2); :};
+
+expression ::= procedureDefn:p {: RESULT = p; :} |
+				letExp:e  {: RESULT = e; :} |
+				caseExp:e  {: RESULT = e; :} |
+				expression2:e {: RESULT = e; :};
+
+expression2 ::= LIT_LBRACE stmtList:l LIT_RBRACE {: RESULT = new ASTStatementSequenceExpression(l); :};
+				
+
+expression2 ::= logicalOrExp:e {: RESULT = e; :};
+
+expression2 ::= KW_PRINT LIT_LPAREN stmt2:e LIT_RPAREN
+			{: RESULT = new ASTPrintExpression(e); :};
+expression2 ::= KW_PRINT_LN LIT_LPAREN stmt2:e LIT_RPAREN
+			{: RESULT = new ASTPrintLnExpression(e); :};
+
+expression2 ::= KW_READ LIT_LPAREN LIT_RPAREN {: RESULT = new ASTReadStringExpression(); :};
+expression2 ::= KW_READ_INT LIT_LPAREN LIT_RPAREN {: RESULT = new ASTReadIntegerExpression(); :};
+
+aliasAssign ::= identifierList:l LIT_ASSIGN expression:e {: RESULT = new ASTMultipleAliasAssignment(l, e); :} ;
+				
+aliasDefn ::= KW_DEF identifier:i expression:e {: RESULT = new ASTAliasDefinition(i, e); :};
+
+logicalOrExp ::= logicalOrExp:e LIT_LOGIC_OR logicalAndExp:e2 {: RESULT = new ASTLogicalOrExpression(e, e2); :} |
+			logicalAndExp:e {: RESULT = e; :};
+		
+logicalAndExp ::= logicalAndExp:e LIT_LOGIC_AND logicalNotExp:e2 {: RESULT = new ASTLogicalAndExpression(e, e2); :} |
+			logicalNotExp:e {: RESULT = e; :};
+		
+logicalNotExp ::= LIT_LOGIC_NOT logicalNotExp:e {: RESULT = new ASTLogicalNotExpression(e); :} |
+			relationalExp:e {: RESULT = e; :};
+
+relationalExp ::= relationalExp:e LIT_REL_EQ bitwiseExp:e2 {: RESULT = new ASTRelationalEqualExpression(e, e2); :} |
+			relationalExp:e LIT_REL_GT bitwiseExp:e2 {: RESULT = new ASTRelationalGreaterThanExpression(e, e2); :} |
+			relationalExp:e LIT_REL_LT bitwiseExp:e2 {: RESULT = new ASTRelationalLessThanExpression(e, e2); :} |
+			relationalExp:e LIT_REL_GTEQ bitwiseExp:e2 {: RESULT = new ASTRelationalGreaterThanOrEqualExpression(e, e2); :} |
+			relationalExp:e LIT_REL_LTEQ bitwiseExp:e2 {: RESULT = new ASTRelationalLessThanOrEqualExpression(e, e2); :} |
+			relationalExp:e LIT_REL_NOT_EQ bitwiseExp:e2 {: RESULT = new ASTRelationalNotEqualExpression(e, e2); :} |
+			bitwiseExp:e {: RESULT = e; :};
+
+bitwiseExp ::= bitwiseExp:e LIT_BIT_AND arithExp:e2 {: RESULT = new ASTBitwiseAndExpression(e, e2); :} |
+			bitwiseExp:e LIT_BIT_OR arithExp:e2 {: RESULT = new ASTBitwiseOrExpression(e, e2); :} |
+			bitwiseExp:e LIT_CONCAT arithExp:e2 {: RESULT = new ASTListConcatExpression(e, e2); :} |
+			arithExp:e {: RESULT = e; :};
+
+arithExp ::= arithExp:e LIT_ADD arithTerm:t {: RESULT = new ASTAddExpression(e, t); :} |
+			LIT_LPAREN LIT_MINUS arithExp:e LIT_RPAREN {: RESULT = new ASTNegationExpression(e); :} |
+			arithExp:e LIT_MINUS arithTerm:t {: RESULT = new ASTMinusExpression(e, t); :} |
+			arithTerm:t {: RESULT = t; :};
+
+arithTerm ::= arithTerm:t LIT_MULTIPLY arithComplement:c {: RESULT = new ASTMultiplyExpression(t, c); :} |
+	 		arithTerm:t LIT_DIVIDE arithComplement:c {:	RESULT = new ASTDivideExpression(t, c); :} |
+	 		arithTerm:t LIT_MODULUS arithComplement:c {: RESULT = new ASTModulusExpression(t, c); :} |
+	 		arithComplement:c {: RESULT = c; :};
+
+arithComplement ::= LIT_BIT_COMP arithComplement:c {: RESULT = new ASTBitwiseComplementExpression(c); :} |
+	 		arithFactor:f {: RESULT = f; :};
+
+arithFactor ::= integer:i {: RESULT = i; :} |
+			boolean:b {: RESULT = b; :} |
+			string:s {: RESULT = s; :} |
+			character:c {: RESULT = c; :} |
+	   		double:d {: RESULT = d; :} |
+	   		identifier:i {: RESULT = i; :} |
+	   		listDefn:e {: RESULT = e; :} |
+	   		vectorDefn:v {: RESULT = v; :} |
+	   		vectorIndex:v {: RESULT = v; :} |
+			procedureCall:p {: RESULT = p; :} |
+			procedureSpecialCall:p {: RESULT = p; :} |
+			lazyExp:e {: RESULT = e; :} |			
+	   		LIT_LPAREN expression:e LIT_RPAREN {: RESULT = e; :};
+
+string ::= STRING:s {: RESULT = new ASTString(s); :};
+character ::= CHARACTER:c {: RESULT = new ASTCharacter(c); :};
+character ::= HEX_CHARACTER:c {: RESULT = new ASTCharacter(c, true); :};
+
+procedureDefn ::= KW_PROC LIT_LPAREN identifierList:a LIT_RPAREN procExpression:e 
+				{: RESULT = new ASTCreateProcedureExpression(a, e); :} |
+			KW_PROC LIT_LPAREN identifierList:a LIT_DOT identifier:i LIT_RPAREN procExpression:e 
+				{: RESULT = new ASTCreateVariableAriyProcedureExpression(a, i, e); :} |
+			KW_PROC identifier:i procExpression:e 
+				{: RESULT = new ASTCreateOpenAriyProcedureExpression(i, e); :};
+
+procExpression ::= stmt2:e {: RESULT = e; :};
+			
+identifierList ::= identifierList:l LIT_COMMA identifier2:i {: RESULT = l; l.add(i); :} |
+				identifier2:i {: RESULT = new ASTIdentifierList(i); :};
+
+identifier2 ::= KW_REF identifier:i {: i.setIsReference(); RESULT = i; :} |
+			identifier:i {: RESULT = i; :};
+			
+procedureSpecialCall ::= KW_CALL LIT_LPAREN expression:e LIT_COMMA expression:e2 LIT_RPAREN
+				{: RESULT = new ASTSpecialCallProcedureExpression(e, e2); :};
+
+procedureCall ::= arithFactor:e LIT_LPAREN argList:l LIT_RPAREN 
+				{: RESULT = new ASTCallProcedureExpression(e, l); :};
+
+argList ::= argList:l LIT_COMMA expression:e {: RESULT = l; l.add(e); :} |
+				expression:e {: RESULT = new ASTArgumentList(e); :};
+
+lazyExp ::= KW_LAZY LIT_LPAREN expression:e LIT_RPAREN
+				{: RESULT = new ASTLazyEvaluationExpression(e); :};
+
+letExp ::= KW_LET LIT_LPAREN aliasBindingList:l LIT_RPAREN expression:e 
+				{: RESULT = new ASTLetAliasDefinitionExpansionExpression(l, e); :};
+
+aliasBindingList ::= aliasBindingList:l LIT_COMMA aliasBinding:b {: RESULT = l; l.add(b); :} |
+				aliasBinding:b {: RESULT = new ASTAliasDefinitionList(b); :};
+				
+aliasBinding ::= identifier:i KW_BE expression:e {: RESULT = new ASTAliasDefinition(i, e); :};
+
+listDefn ::= LIT_LBRACKET expressionList:l LIT_RBRACKET 
+				{: RESULT = new ASTListCreationExpression(l); :} |
+			KW_EMPTY_LIST {: RESULT = new ASTNillList(); :} |
+			LIT_LBRACKET LIT_RBRACKET {: RESULT = new ASTNillList(); :};
+
+vectorDefn ::= LIT_LVBRACKET expressionList:l LIT_RVBRACKET 
+				{: RESULT = new ASTVectorCreationExpression(l); :} |
+				LIT_LVBRACKET LIT_RVBRACKET
+				{: RESULT = new ASTVectorCreationExpression(); :};
+				
+expressionList ::= expressionList:l LIT_COMMA expression:e {: RESULT = l; l.add(e); :} |
+			expressionList:l LIT_COMMA vectorComprehension:e {: RESULT = l; l.add(e); :} |
+			vectorComprehension:e {: RESULT = new ASTExpressionList(e); :} |
+			expression:e {: RESULT = new ASTExpressionList(e); :};
+
+vectorComprehension ::= expression:e LIT_COLON expression:e2
+			{: RESULT = new ASTVectorComprehensionExpression(e, e2); :};
+
+vectorIndex ::= arithFactor:e LIT_LBRACKET arithFactor:e2 LIT_RBRACKET
+			{: RESULT = new ASTVectorIndexAccessExpression(e2, e); :};
+			
+identifier ::= IDENTIFIER:i {: RESULT = new ASTIdentifier(i); :};
+
+integer ::= INTEGER:i {: RESULT = new ASTInteger(i); :};
+double ::= DOUBLE:d {: RESULT = new ASTDouble(d); :};
+
+boolean ::= KW_FALSE {: RESULT = new ASTBooleanConstantExpression(false); :};
+boolean ::= KW_TRUE {: RESULT = new ASTBooleanConstantExpression(true); :};
+
+empty ::= ;
