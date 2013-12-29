@@ -53,8 +53,8 @@ identifier = [^#\(\)\[\]\{\}\\\'\,\:" "\;0-9]+[^\(\)\[\]\{\}\\\'\,\:" "\;]*|[0-9
 
 <YYINITIAL>	{ws}"."{ws}	{ return new Symbol(sym.DOT); }
 
-<YYINITIAL>	{ws}"+"{ws}	{ return new Symbol(sym.ADD); }
-<YYINITIAL>	{ws}"-"{ws}	{ return new Symbol(sym.SUB); }
+<YYINITIAL>	{ws}"+"{ws}	{ return new Symbol(sym.PLUS); }
+<YYINITIAL>	{ws}"-"{ws}	{ return new Symbol(sym.MINUS); }
 <YYINITIAL>	{ws}"*"{ws}	{ return new Symbol(sym.MULT); }
 <YYINITIAL>	{ws}"/"{ws}	{ return new Symbol(sym.DIV); }
 <YYINITIAL>	{ws}"%"{ws}	{ return new Symbol(sym.MOD); }
