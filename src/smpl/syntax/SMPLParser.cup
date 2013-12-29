@@ -50,7 +50,7 @@ terminal LBRACKET, RBRACKET, LVBRACKET, RVBRACKET, LPAREN, RPAREN,
             ASSIGN, DOT;
 
 // arithmetic operators
-terminal ADD, SUB, MULT, DIV, MOD;
+terminal PLUS, MINUS, MULT, DIV, MOD;
 
 // bitwise operators
 terminal BIT_AND, BIT_OR, BIT_COMP;
@@ -66,7 +66,7 @@ terminal CONCAT;
 
 // special keywords
 terminal TRUE, FALSE, EMPTY_LIST, 
-			PAIR, PAIR_QS, CAR, CDR, SIZE, EQV, EQ_COMPARE, SUBSTR
+			PAIR, PAIR_QS, CAR, CDR, SIZE, EQV, EQ_COMPARE, SUBSTR,
 			PROC, CALL, LAZY, LET, DEF, IF,
 			THEN, ELSE, CASE, PRINT, PRINT_LN, READ, READ_INT, BE,
 			DYNAMIC, REF;
@@ -214,14 +214,14 @@ bitwiseExp ::= bitwiseExp:e BIT_AND arithExp:e2 {: RESULT = new ASTBitwiseAndExp
 			bitwiseExp:e CONCAT arithExp:e2 {: RESULT = new ASTListConcatExpression(e, e2); :} |
 			arithExp:e {: RESULT = e; :};
 
-arithExp ::= arithExp:e ADD arithTerm:t {: RESULT = new ASTAddExpression(e, t); :} |
+arithExp ::= arithExp:e PLUS arithTerm:t {: RESULT = new ASTAddExpression(e, t); :} |
 			LPAREN MINUS arithExp:e RPAREN {: RESULT = new ASTNegationExpression(e); :} |
 			arithExp:e MINUS arithTerm:t {: RESULT = new ASTMinusExpression(e, t); :} |
 			arithTerm:t {: RESULT = t; :};
 
-arithTerm ::= arithTerm:t MULTIPLY arithComplement:c {: RESULT = new ASTMultiplyExpression(t, c); :} |
-	 		arithTerm:t DIVIDE arithComplement:c {:	RESULT = new ASTDivideExpression(t, c); :} |
-	 		arithTerm:t MODULUS arithComplement:c {: RESULT = new ASTModulusExpression(t, c); :} |
+arithTerm ::= arithTerm:t MULT arithComplement:c {: RESULT = new ASTMultiplyExpression(t, c); :} |
+	 		arithTerm:t DIV arithComplement:c {:	RESULT = new ASTDivideExpression(t, c); :} |
+	 		arithTerm:t MOD arithComplement:c {: RESULT = new ASTModulusExpression(t, c); :} |
 	 		arithComplement:c {: RESULT = c; :};
 
 arithComplement ::= BIT_COMP arithComplement:c {: RESULT = new ASTBitwiseComplementExpression(c); :} |
