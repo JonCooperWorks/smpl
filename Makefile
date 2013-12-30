@@ -3,6 +3,7 @@ LEXER_PATH = src/smpl/syntax/SMPLLexer.jflex
 PARSER_PATH = src/smpl/syntax/SMPLParser.cup
 OLD_LEXER_PATH = src/smpl/syntax/SMPLLexer.java~
 SYNTAX_DIR = src/smpl/syntax
+APACHE_PATH = lib/commons-lang3-3.1.jar
 
 cup:
 	@echo "Generating SMPLParser.java and sym.java"
@@ -20,7 +21,7 @@ jflex:
 
 compile:
 	@echo "Compiling Java"
-	@javac -cp ":$(CUP_PATH)" src/smpl/*/*.java
+	@javac -cp ":$(CUP_PATH):$(APACHE_PATH)" src/smpl/*/*.java
 	@echo "Done"
 
 run:
