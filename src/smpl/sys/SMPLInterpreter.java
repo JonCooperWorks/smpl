@@ -22,9 +22,9 @@ import smpl.syntax.SMPLParser;
 /**
  * 
  */
-public class SMPLInerpreter {
+public class SMPLInterpreter {
 
-    private static Logger sLogger = Logger.getLogger(SMPLInerpreter.class
+    private static Logger sLogger = Logger.getLogger(SMPLInterpreter.class
 	    .getName());
 
     private static SMPLEnvironment sGlobalInterpreterEnvironment;
@@ -38,8 +38,8 @@ public class SMPLInerpreter {
      */
     public static void main(final String[] args) {
 	// Defualt evaluator is the SMPLEvaluator
-	SMPLInerpreter.sCurrentInterpreterEvaluator = new SMPLEvaluator();
-	SMPLInerpreter.sGlobalInterpreterEnvironment = SMPLInerpreter.sCurrentInterpreterEvaluator
+	SMPLInterpreter.sCurrentInterpreterEvaluator = new SMPLEvaluator();
+	SMPLInterpreter.sGlobalInterpreterEnvironment = SMPLInterpreter.sCurrentInterpreterEvaluator
 		.getGlobalEnvironment();
 
 	System.out.println("SMPL Lexer Evaluator");
@@ -63,7 +63,7 @@ public class SMPLInerpreter {
 		    System.out.print("SMPL> ");
 		final String line = scanner.nextLine().trim();
 
-		if (!SMPLInerpreter.serviceFlags(line))
+		if (!SMPLInterpreter.serviceFlags(line))
 		    if ("#begin#".equals(line)) {
 			inMultilineEntry = true;
 			System.out.println("SMPL--> Multiline input started.");
@@ -84,9 +84,9 @@ public class SMPLInerpreter {
 		final InputStream is = new ByteArrayInputStream(programBuilder
 			.toString().getBytes());
 
-		SMPLInerpreter.parseEvalShow(is);
+		SMPLInterpreter.parseEvalShow(is);
 
-		if (SMPLInerpreter.isFlagSet(Flags.LexStream)) {
+		if (SMPLInterpreter.isFlagSet(Flags.LexStream)) {
 
 		    // convert String into InputStream
 		    final InputStream is2 = new ByteArrayInputStream(
@@ -109,61 +109,61 @@ public class SMPLInerpreter {
 	try {
 	    final ASTNode<?> result = (ASTNode<?>) parser.parse().value;
 
-	    if (SMPLInerpreter.isFlagSet(Flags.ParseTree)) {
+	    if (SMPLInterpreter.isFlagSet(Flags.ParseTree)) {
 		System.out.println("SMPL Parse Tree-> ");
 		System.out.println(result.getTreeRepresentation());
 	    }
 
 	    final SMPLValue<?> evalutedResult = result.visit(
-		    SMPLInerpreter.sCurrentInterpreterEvaluator,
-		    SMPLInerpreter.sGlobalInterpreterEnvironment);
+		    SMPLInterpreter.sCurrentInterpreterEvaluator,
+		    SMPLInterpreter.sGlobalInterpreterEnvironment);
 
 	    System.out.println("SMPL Result-> ");
 	    System.out.println(evalutedResult.toString());
 
 	} catch (final SMPLException e) {
-	    SMPLInerpreter.sLogger.log(Level.SEVERE, e.getMessage());
-	    if (SMPLInerpreter.isFlagSet(Flags.Debug))
-		SMPLInerpreter.sLogger.log(Level.SEVERE, null, e);
+	    SMPLInterpreter.sLogger.log(Level.SEVERE, e.getMessage());
+	    if (SMPLInterpreter.isFlagSet(Flags.Debug))
+		SMPLInterpreter.sLogger.log(Level.SEVERE, null, e);
 	} catch (final ASTException e) {
-	    SMPLInerpreter.sLogger.log(Level.SEVERE, e.getMessage());
-	    if (SMPLInerpreter.isFlagSet(Flags.Debug))
-		SMPLInerpreter.sLogger.log(Level.SEVERE, null, e);
+	    SMPLInterpreter.sLogger.log(Level.SEVERE, e.getMessage());
+	    if (SMPLInterpreter.isFlagSet(Flags.Debug))
+		SMPLInterpreter.sLogger.log(Level.SEVERE, null, e);
 	} catch (final Exception e) {
-	    SMPLInerpreter.sLogger.log(Level.SEVERE, e.getMessage());
-	    if (SMPLInerpreter.isFlagSet(Flags.Debug))
-		SMPLInerpreter.sLogger.log(Level.SEVERE, null, e);
+	    SMPLInterpreter.sLogger.log(Level.SEVERE, e.getMessage());
+	    if (SMPLInterpreter.isFlagSet(Flags.Debug))
+		SMPLInterpreter.sLogger.log(Level.SEVERE, null, e);
 	}
     }
 
     private static boolean serviceFlags(final String line) {
 	if ("#debug#".equals(line)) {
-	    SMPLInerpreter.setFlag(Flags.Debug);
+	    SMPLInterpreter.setFlag(Flags.Debug);
 	    System.out.println("SMPL--> Debug output started.");
 	    return true;
 	}
 	if ("#nodebug#".equals(line)) {
-	    SMPLInerpreter.clearFlag(Flags.Debug);
+	    SMPLInterpreter.clearFlag(Flags.Debug);
 	    System.out.println("SMPL--> Debug output ended.");
 	    return true;
 	}
 	if ("#parsetree#".equals(line)) {
-	    SMPLInerpreter.setFlag(Flags.ParseTree);
+	    SMPLInterpreter.setFlag(Flags.ParseTree);
 	    System.out.println("SMPL--> Parse Tree output started.");
 	    return true;
 	}
 	if ("#noparsetree#".equals(line)) {
-	    SMPLInerpreter.clearFlag(Flags.ParseTree);
+	    SMPLInterpreter.clearFlag(Flags.ParseTree);
 	    System.out.println("SMPL--> Parse Tree output ended.");
 	    return true;
 	}
 	if ("#lexstream#".equals(line)) {
-	    SMPLInerpreter.setFlag(Flags.LexStream);
+	    SMPLInterpreter.setFlag(Flags.LexStream);
 	    System.out.println("SMPL--> Lexical Steam output started.");
 	    return true;
 	}
 	if ("#nolexstream#".equals(line)) {
-	    SMPLInerpreter.clearFlag(Flags.LexStream);
+	    SMPLInterpreter.clearFlag(Flags.LexStream);
 	    System.out.println("SMPL--> Lexical Stream output ended.");
 	    return true;
 	}
@@ -172,15 +172,15 @@ public class SMPLInerpreter {
     }
 
     private static boolean isFlagSet(final int flag) {
-	return (SMPLInerpreter.sInterpreterFlags & flag) == flag;
+	return (SMPLInterpreter.sInterpreterFlags & flag) == flag;
     }
 
     private static void setFlag(final int flag) {
-	SMPLInerpreter.sInterpreterFlags |= flag;
+	SMPLInterpreter.sInterpreterFlags |= flag;
     }
 
     private static void clearFlag(final int flag) {
-	SMPLInerpreter.sInterpreterFlags &= ~(flag);
+	SMPLInterpreter.sInterpreterFlags &= ~(flag);
     }
 
     private static interface Flags {
