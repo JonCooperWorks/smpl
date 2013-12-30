@@ -1,5 +1,5 @@
 CUP_PATH = lib/cup.jar
-LEXER_PATH = src/smpl/syntax/SMPLLexer
+LEXER_PATH = src/smpl/syntax/SMPLLexer.jflex
 PARSER_PATH = src/smpl/syntax/SMPLParser.cup
 OLD_LEXER_PATH = src/smpl/syntax/SMPLLexer.java~
 SYNTAX_DIR = src/smpl/syntax
