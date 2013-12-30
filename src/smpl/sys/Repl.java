@@ -1,117 +1,76 @@
-package smpl.sys;
-
-import smpl.semantics.SMPLValue.SMPLEvaluator;
+import java_cup.runtime.*;
 import java.io.*;
-import smpl.semantics.Visitor;
+
+import smpl.semantics.SMPLValue.SMPLEnvironment;
+import smpl.semantics.SMPLValue.SMPLEvaluator;
+import smpl.semantics.SMPLValue.SMPLException;
+import smpl.semantics.SMPLValue.Objects.SMPLValue;
+import smpl.syntax.ASTException;
+import smpl.syntax.ASTNode;
+import smpl.syntax.ASTProgram;
 import smpl.syntax.SMPLLexer;
 import smpl.syntax.SMPLParser;
-import smpl.syntax.ASTProgram;
-import java.util.ArrayList;
 
-public class Repl<S, T> {
+public class Repl {
 
-    public final String PROMPT = ">";
-    protected Class<? extends Visitor<S, T>> evalClass;
-    Visitor<S, T> interp;
+	private static SMPLEnvironment globalEnv;
+    private static SMPLEvaluator sCurrentInterpreterEvaluator;
+    public static final String PROMPT = ">";
 
-    public Repl(Class<? extends Visitor<S, T>> vClass) {
-        this.interp = null;
-        evalClass = vClass;
-        try {
-            interp = evalClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException ie) {
-            System.err.println(ie.getMessage());
-            System.err.println("Fatal error: Failed to instantiate "
-                    + "interpreter!  Terminating...");
-            System.exit(1);
-        }
-    }
+    public static Class<? extends SMPLEvaluator> evalClass;
 
-    @SuppressWarnings("unchecked")
     public static void main(String args[]) {
-        // if provided, first command line argument is class of evaluator
-        // default is FractalEvaluator
-        Repl<?, ?> repl;
-        if (args.length == 0) {
-            repl = new Repl<>(SMPLEvaluator.class);
-            repl.loop();
-        } else {
-            try {
-                repl = new Repl(Class.forName(args[0]));
-                ArrayList<String> fileList = new ArrayList<>();
-                for (int i = 1; i < args.length; i++) {
-                    fileList.add(args[i]);
-                }
-                repl.visitFiles(fileList);
-                repl.loop();
-            } catch (ClassNotFoundException cnfe) {
-                System.err.println(cnfe.getMessage());
-                System.exit(1);
-            }
-        }
+	// if provided, first command line argument is class of evaluator
+	// default is Evaluator
+	if (args.length == 0)
+	    evalClass = SMPLEvaluator.class;
+	else {
+	    try {
+		evalClass = (Class<? extends SMPLEvaluator>) Class.forName(args[0]);
+	    } catch (ClassNotFoundException cnfe) {
+		System.err.println(cnfe.getMessage());
+		System.exit(1);
+	    }
+	}
+
+	repl(System.in, globalEnv);
     }
 
-    public void visitFiles(ArrayList<String> fileNames) {
-        // Treat all other command line arguments as files to be read and evaluated
-        FileReader freader;
-        for (String file : fileNames) {
-            try {
-                System.out.println("Reading from: " + file + "...");
-                freader = new FileReader(new File(file));
-                parseVisitShow(interp, freader);
-                System.out.println("Done! Press ENTER to continue");
-                System.in.read();
-            } catch (FileNotFoundException fnfe) {
-                System.err.println(fnfe.getMessage());
-                System.err.println("Skipping it");
-            } catch (IOException ioe) {
-                System.err.println(ioe.getMessage());
-            }
-        }
+    public static void repl(InputStream is, SMPLEnvironment env){
+	while (true) {
+	    parseEvalShow(is, env);
+	}
     }
 
-    /**
-     * The driver loop in which the standard input is read until EOF is pressed
-     * (Ctrl-D on Unix, Ctrl-Z on Windows); on each pass of the loop, that input
-     * is parsed, and visited, and the result is displayed .
-     */
-    public void loop() {
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
-            parseVisitShow(interp, reader);
-        }
-    }
+    public static void parseEvalShow(InputStream is, SMPLEnvironment env) {
+	SMPLParser parser;
+	ASTProgram program = null;
+	SMPLEvaluator interp;
+	try {
+	    interp = evalClass.newInstance();
 
-    /**
-     * Read a program from the given input reader, then parse it and evaluate it
-     * and display the result.
-     *
-     * @param interp The interpreter to be used to evaluate the program
-     * @param reader The input reader supplying the program
-     */
-    public void parseVisitShow(Visitor<S, T> interp, Reader reader) {
-        SMPLParser parser;
-        ASTProgram program = null;
+	    System.out.print(PROMPT);
+	    try {
+		parser = new SMPLParser(new SMPLLexer(is));
+		program = (ASTProgram) parser.parse().value;
+	    } catch (Exception e) {
+		System.out.println("Parse Error: " + e.getMessage());
+	    }
 
-        System.out.print(PROMPT);
-        try {
-            parser = new SMPLParser(new SMPLLexer(reader));
-            program = (ASTProgram) parser.parse().value;
-        } catch (Exception e) {
-            System.out.println("Parse Error: " + e.getMessage());
-        }
-
-
-        if (program != null) {
-            try {
-                T result;
-                // A null state indicates that this is the entry call to interp
-                result = program.visit(interp, null);
-                System.out.println("\nResult: " + result);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
+	    if (program != null)
+		try {
+		    SMPLValue result;
+		    result = program.visit(interp, env);
+		    System.out.println("\nResult: " + result);
+		} catch (Exception e) {
+		    System.out.println(e.getMessage());
+		}
+	} catch (InstantiationException ie) {
+	    System.err.println(ie.getMessage());
+	    System.exit(1);
+	} catch (IllegalAccessException iae) {
+	    System.err.println(iae.getMessage());
+	    System.exit(1);
+	}
     }
 }
