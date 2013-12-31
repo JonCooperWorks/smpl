@@ -10,22 +10,22 @@ import smpl.semantics.Visitor;
  */
 public class ASTInteger extends ASTExpression<ASTNoOperationNode> {
 
-    private final String mMatchedString;
+	private final String mMatchedString;
 
-    public ASTInteger(final String strValue) {
-	super("integer(" + strValue + ")");
+	public ASTInteger(final String strValue) {
+		super("integer(" + strValue + ")");
 
-	mMatchedString = strValue;
-    }
+		mMatchedString = strValue;
+	}
 
-    public String getMatchedString() {
-	return mMatchedString;
-    }
+	public String getMatchedString() {
+		return mMatchedString;
+	}
 
-    @Override
-    public <S, T> T visit(final Visitor<S, T> visitor, final S state)
-	    throws ASTException {
-	return visitor.visitInteger(this, state);
-    }
+	@Override
+	public <S, T> T visit(final Visitor<S, T> visitor, final S state)
+			throws ASTException {
+		return visitor.visitInteger(this, state);
+	}
 
 }

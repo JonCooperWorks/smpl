@@ -8,15 +8,15 @@ package smpl.semantics.SMPLValue.Objects;
  */
 public class SMPLNillObject extends SMPLList {
 
-    public SMPLNillObject() {
-	super();
+	public SMPLNillObject() {
+		super();
 
-	setTypeName("nill");
-    }
+		setTypeName("nill");
+	}
 
-    @Override
-    public String toString() {
-	return "";
-    }
+	@Override
+	public String toString() {
+		return "";
+	}
 
 }

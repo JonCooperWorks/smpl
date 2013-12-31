@@ -13,10 +13,10 @@ import smpl.syntax.ASTIdentifier;
  */
 public abstract class SMPLNativeProcedure extends SMPLProcedure {
 
-    protected SMPLNativeProcedure(final ArrayList<String> params,
-	    final ASTExpression<?> body, final ASTIdentifier vArgIdentifier,
-	    final int flags) {
-	super(params, body, vArgIdentifier, flags);
-    }
+	protected SMPLNativeProcedure(final ArrayList<String> params,
+			final ASTExpression<?> body, final ASTIdentifier vArgIdentifier,
+			final int flags) {
+		super(params, body, vArgIdentifier, flags);
+	}
 
 }
