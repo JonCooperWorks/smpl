@@ -1,3 +1,6 @@
+/* Specification for CrystalGen tokens */
+
+// user customisations
 package smpl.syntax;
 import java_cup.runtime.*;
 
@@ -8,6 +11,7 @@ import java_cup.runtime.*;
 %cup
 %public
 
+%states YYSTRING
 
 %class SMPLLexer
 
@@ -34,71 +38,57 @@ import java_cup.runtime.*;
     }
 %}
 
-nl = [\n\r]|[\r\n]
+ nl = [\n\r]|[\r\n]
 
 cc = ([\b\f]|{nl})
 
 ws = {cc}|[\t ]
 
-alpha = [a-zA-Z_"$""#""?""@""~"]
-
-num = [0-9]
-
-alphanum = {alpha}|{num}
-
+//iic = [\(|\)|\[|\]|\{|\}|\\|\'|\,|\:|" "|\;]
 
 identifier = [^#\(\)\[\]\{\}\\\'\,\:" "\;0-9]+[^\(\)\[\]\{\}\\\'\,\:" "\;]*|[0-9]+[^\(\)\[\]\{\}\\\'\,\:" "\0-9]+[^\(\)\[\]\{\}\\\'\,\:" "\;]*
 %%
 
 
-<YYINITIAL> {ws}    {
-                    // skip whitespace
-                }
-<YYINITIAL>	"."	{ return new Symbol(sym.DOT); }
 
-<YYINITIAL>	"+"	{ return new Symbol(sym.PLUS); }
-<YYINITIAL>	"-"	{ return new Symbol(sym.MINUS); }
-<YYINITIAL>	"*"	{ return new Symbol(sym.MULT); }
-<YYINITIAL>	"/"	{ return new Symbol(sym.DIV); }
-<YYINITIAL>	"%"	{ return new Symbol(sym.MOD); }
+<YYINITIAL>	{ws}"."{ws}	{ return new Symbol(sym.DOT); }
 
-<YYINITIAL>	"&"	{ return new Symbol(sym.BIT_AND); }
-<YYINITIAL>	"|"	{ return new Symbol(sym.BIT_OR); }
-<YYINITIAL>	"~"	{ return new Symbol(sym.BIT_COMP); }
+<YYINITIAL>	{ws}"+"{ws}	{ return new Symbol(sym.PLUS); }
+<YYINITIAL>	{ws}"-"{ws}	{ return new Symbol(sym.MINUS); }
+<YYINITIAL>	{ws}"*"{ws}	{ return new Symbol(sym.MULT); }
+<YYINITIAL>	{ws}"/"{ws}	{ return new Symbol(sym.DIV); }
+<YYINITIAL>	{ws}"%"{ws}	{ return new Symbol(sym.MOD); }
 
-<YYINITIAL>	"="	{ return new Symbol(sym.EQ); }
-<YYINITIAL>	">"	{ return new Symbol(sym.GT); }
-<YYINITIAL>	"<"	{ return new Symbol(sym.LT); }
-<YYINITIAL>	"<=" { return new Symbol(sym.LTEQ); }
-<YYINITIAL>	">="	{ return new Symbol(sym.GTEQ); }
-<YYINITIAL>	"!="	{ return new Symbol(sym.NOT_EQ); }
+<YYINITIAL>	{ws}"&"{ws}	{ return new Symbol(sym.BIT_AND); }
+<YYINITIAL>	{ws}"|"{ws}	{ return new Symbol(sym.BIT_OR); }
+<YYINITIAL>	{ws}"~"{ws}	{ return new Symbol(sym.BIT_COMP); }
 
-<YYINITIAL>	"and" { return new Symbol(sym.LOGIC_AND); }
-<YYINITIAL>	"or"	{ return new Symbol(sym.LOGIC_OR); }
-<YYINITIAL>	"not"	{ return new Symbol(sym.LOGIC_NOT); }
+<YYINITIAL>	{ws}"="{ws}	{ return new Symbol(sym.EQ); }
+<YYINITIAL>	{ws}">"{ws}	{ return new Symbol(sym.GT); }
+<YYINITIAL>	{ws}"<"{ws}	{ return new Symbol(sym.LT); }
+<YYINITIAL>	{ws}"<="{ws}	{ return new Symbol(sym.LTEQ); }
+<YYINITIAL>	{ws}">="{ws}	{ return new Symbol(sym.GTEQ); }
+<YYINITIAL>	{ws}"!="{ws}	{ return new Symbol(sym.NOT_EQ); }
 
-<YYINITIAL>	"@"		{ return new Symbol(sym.CONCAT); }
+<YYINITIAL>	{ws}"and"{ws}	{ return new Symbol(sym.LOGIC_AND); }
+<YYINITIAL>	{ws}"or"{ws}	{ return new Symbol(sym.LOGIC_OR); }
+<YYINITIAL>	{ws}"not"{ws}	{ return new Symbol(sym.LOGIC_NOT); }
+
+<YYINITIAL>	{ws}"@"{ws}		{ return new Symbol(sym.CONCAT); }
 
 <YYINITIAL>	{nl}	{
                     //skip newline, but reset char counter
                     yychar = 0;
                 }
-
+<YYINITIAL>	{ws}	{
+                    // skip whitespace
+                }
 <YYINITIAL>	"//".*|"/*".*"*/"	{
                     // ignore comments
                  }
 
-<YYINITIAL>    {num}+ {
-         // INTEGER
-         return new Symbol(sym.INTEGER,
-         new Integer(yytext()));
-         }
-
-<YYINITIAL>   {num}*\.{num}+ {
-         // REAL
-         return new Symbol(sym.DOUBLE,
-         new Double(yytext()));
-         }
+<YYINITIAL> [-+]?[0-9]+|"#x"[0-9a-fA-F]+|"#b"[0-1]+ { return new Symbol(sym.INTEGER, yytext()); }
+<YYINITIAL> [-+]?([0-9]*"."[0-9]+|[0-9]+"."[0-9]*) { return new Symbol(sym.DOUBLE, yytext()); }
 
 
 <YYINITIAL> \"[^\"\\]*(\\.[^\"\\]*)*\" {
