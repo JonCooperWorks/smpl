@@ -92,7 +92,6 @@ public class SMPLInterpreter {
 		    final InputStream is2 = new ByteArrayInputStream(
 			    programBuilder.toString().getBytes());
 
-		    LexerTestMain.lexShow(is2, false);
 		}
 
 	    }

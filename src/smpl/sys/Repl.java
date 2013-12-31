@@ -29,26 +29,10 @@ public class Repl<S, T> {
 
     @SuppressWarnings("unchecked")
     public static void main(String args[]) {
-        // if provided, first command line argument is class of evaluator
-        // default is FractalEvaluator
+        // Create a new SMPL Repl.
         Repl<?, ?> repl;
-        if (args.length == 0) {
-            repl = new Repl<>(SMPLEvaluator.class);
-            repl.loop();
-        } else {
-            try {
-                repl = new Repl(Class.forName(args[0]));
-                ArrayList<String> fileList = new ArrayList<>();
-                for (int i = 1; i < args.length; i++) {
-                    fileList.add(args[i]);
-                }
-                repl.visitFiles(fileList);
-                repl.loop();
-            } catch (ClassNotFoundException cnfe) {
-                System.err.println(cnfe.getMessage());
-                System.exit(1);
-            }
-        }
+        repl = new Repl<>(SMPLEvaluator.class);
+        repl.loop();
     }
 
     public void visitFiles(ArrayList<String> fileNames) {
