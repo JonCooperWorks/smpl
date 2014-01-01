@@ -8,18 +8,18 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTDivideExpression extends ASTArithExpression<ASTExpression<?>> {
+public class ASTDivideExpression extends ASTArithExp<ASTExp<?>> {
 
-	public ASTDivideExpression(final ASTExpression<?> operand1,
-			final ASTExpression<?> operand2) {
+	public ASTDivideExpression(final ASTExp<?> operand1,
+			final ASTExp<?> operand2) {
 		super("divide_expression", operand1, operand2);
 	}
 
-	public ASTExpression<?> getOperand1() {
+	public ASTExp<?> getOperand1() {
 		return getChild(0);
 	}
 
-	public ASTExpression<?> getOperand2() {
+	public ASTExp<?> getOperand2() {
 		return getChild(1);
 	}
 

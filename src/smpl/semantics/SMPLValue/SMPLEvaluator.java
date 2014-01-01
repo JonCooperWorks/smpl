@@ -34,66 +34,66 @@ import smpl.semantics.SMPLValue.Objects.NativeFunctions.SMPLListNativeFunction;
 import smpl.semantics.SMPLValue.Objects.NativeFunctions.SMPLPairNativeFunction;
 import smpl.semantics.SMPLValue.Objects.NativeFunctions.SMPLSizeNativeFunction;
 import smpl.semantics.SMPLValue.Objects.NativeFunctions.SMPLSubStrNativeFunction;
-import smpl.syntax.ASTAddExpression;
-import smpl.syntax.ASTAliasAssignment;
-import smpl.syntax.ASTAliasDefinition;
+import smpl.syntax.ASTAddExp;
+import smpl.syntax.ASTAliasAssign;
+import smpl.syntax.ASTAliasDefn;
 import smpl.syntax.ASTAliasDefinitionList;
 import smpl.syntax.ASTArgumentList;
-import smpl.syntax.ASTBitwiseAndExpression;
-import smpl.syntax.ASTBitwiseComplementExpression;
-import smpl.syntax.ASTBitwiseOrExpression;
-import smpl.syntax.ASTBooleanConstantExpression;
-import smpl.syntax.ASTCallProcedureExpression;
-import smpl.syntax.ASTCaseClasue;
+import smpl.syntax.ASTBitwiseAndExp;
+import smpl.syntax.ASTComplementExp;
+import smpl.syntax.ASTBitwiseOrExp;
+import smpl.syntax.ASTBooleanConstantExp;
+import smpl.syntax.ASTCallProcedureExp;
+import smpl.syntax.ASTCaseClause;
 import smpl.syntax.ASTCaseClauseList;
-import smpl.syntax.ASTCaseExpression;
+import smpl.syntax.ASTCaseExp;
 import smpl.syntax.ASTCharacter;
-import smpl.syntax.ASTCreateOpenAriyProcedureExpression;
-import smpl.syntax.ASTCreateProcedureExpression;
-import smpl.syntax.ASTCreateVariableAriyProcedureExpression;
+import smpl.syntax.ASTCreateOpenArityProcedureExp;
+import smpl.syntax.ASTCreateProcedureExp;
+import smpl.syntax.ASTCreateVariableArityProcedureExp;
 import smpl.syntax.ASTDivideExpression;
 import smpl.syntax.ASTDouble;
-import smpl.syntax.ASTDynamicBindingsExpression;
+import smpl.syntax.ASTDynamicBindingsExp;
 import smpl.syntax.ASTException;
-import smpl.syntax.ASTExpression;
+import smpl.syntax.ASTExp;
 import smpl.syntax.ASTExpressionList;
-import smpl.syntax.ASTIdentifier;
+import smpl.syntax.ASTIdent;
 import smpl.syntax.ASTIdentifierList;
-import smpl.syntax.ASTIfThenElseExpression;
+import smpl.syntax.ASTIfThenElseExp;
 import smpl.syntax.ASTInteger;
-import smpl.syntax.ASTLazyEvaluationExpression;
-import smpl.syntax.ASTLetAliasDefinitionExpansionExpression;
-import smpl.syntax.ASTListConcatExpression;
-import smpl.syntax.ASTListCreationExpression;
-import smpl.syntax.ASTLogicalAndExpression;
-import smpl.syntax.ASTLogicalNotExpression;
-import smpl.syntax.ASTLogicalOrExpression;
+import smpl.syntax.ASTLazyEvaluationExp;
+import smpl.syntax.ASTLetAliasDefinitionExpansionExp;
+import smpl.syntax.ASTListConcatExp;
+import smpl.syntax.ASTListCreationExp;
+import smpl.syntax.ASTLogicalAndExp;
+import smpl.syntax.ASTLogicalNotExp;
+import smpl.syntax.ASTLogicalOrExp;
 import smpl.syntax.ASTMinusExpression;
 import smpl.syntax.ASTModulusExpression;
 import smpl.syntax.ASTMultipleAliasAssignment;
 import smpl.syntax.ASTMultiplyExpression;
 import smpl.syntax.ASTNegationExpression;
-import smpl.syntax.ASTNillList;
-import smpl.syntax.ASTNoOperationNode;
-import smpl.syntax.ASTPrintExpression;
-import smpl.syntax.ASTPrintLnExpression;
+import smpl.syntax.ASTNilList;
+import smpl.syntax.ASTNoOp;
+import smpl.syntax.ASTPrintExp;
+import smpl.syntax.ASTPrintLnExp;
 import smpl.syntax.ASTProgram;
-import smpl.syntax.ASTReadIntegerExpression;
-import smpl.syntax.ASTReadStringExpression;
-import smpl.syntax.ASTRelationalEqualExpression;
-import smpl.syntax.ASTRelationalGreaterThanExpression;
-import smpl.syntax.ASTRelationalGreaterThanOrEqualExpression;
-import smpl.syntax.ASTRelationalLessThanExpression;
-import smpl.syntax.ASTRelationalLessThanOrEqualExpression;
-import smpl.syntax.ASTRelationalNotEqualExpression;
-import smpl.syntax.ASTSpecialCallProcedureExpression;
+import smpl.syntax.ASTReadIntegerExp;
+import smpl.syntax.ASTReadStringExp;
+import smpl.syntax.ASTEqualExp;
+import smpl.syntax.ASTGreaterThanExp;
+import smpl.syntax.ASTGreaterThanOrEqualExp;
+import smpl.syntax.ASTLessThanExp;
+import smpl.syntax.ASTLessThanOrEqualExp;
+import smpl.syntax.ASTNotEqualExp;
+import smpl.syntax.ASTSpecialCallProcedureExp;
 import smpl.syntax.ASTStatement;
-import smpl.syntax.ASTStatementSequence;
-import smpl.syntax.ASTStatementSequenceExpression;
+import smpl.syntax.ASTStmtSequence;
+import smpl.syntax.ASTStatementSequenceExp;
 import smpl.syntax.ASTString;
-import smpl.syntax.ASTVectorComprehensionExpression;
-import smpl.syntax.ASTVectorCreationExpression;
-import smpl.syntax.ASTVectorIndexAccessExpression;
+import smpl.syntax.ASTVectorComprehensionExp;
+import smpl.syntax.ASTVectorCreationExp;
+import smpl.syntax.ASTVectorIndexAccessExp;
 
 /**
  * 
@@ -142,12 +142,12 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitStatementSequence(
-			final ASTStatementSequence astSeq, final SMPLEnvironment state)
+			final ASTStmtSequence astSeq, final SMPLEnvironment state)
 			throws ASTException {
 		SMPLValue<SMPLObject> ret = null;
 		boolean first = true;
 		for (final ASTStatement<?> stmt : astSeq.getStatements()) {
-			if (stmt instanceof ASTDynamicBindingsExpression)
+			if (stmt instanceof ASTDynamicBindingsExp)
 				if (!first)
 					throw new SMPLException(
 							"The 'dynamic' statement must be the first sttement.");
@@ -175,8 +175,8 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLObject> visitIdentifier(
-			final ASTIdentifier astIdentifier, final SMPLEnvironment state)
+	public SMPLValue<SMPLObject> visitIdent(
+			final ASTIdent astIdentifier, final SMPLEnvironment state)
 			throws ASTException {
 
 		final String identifierName = astIdentifier.getIdentifierName();
@@ -227,11 +227,11 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLObject> visitAliasDefinition(
-			final ASTAliasDefinition astDefinition, final SMPLEnvironment state)
+	public SMPLValue<SMPLObject> visitAliasDefn(
+			final ASTAliasDefn astDefinition, final SMPLEnvironment state)
 			throws ASTException {
-		final ASTIdentifier identifier = astDefinition.getIdentifierNode();
-		final ASTExpression<?> expression = astDefinition.getExpressionNode();
+		final ASTIdent identifier = astDefinition.getIdentifierNode();
+		final ASTExp<?> expression = astDefinition.getExpressionNode();
 
 		final SMPLValue<SMPLObject> expressionEvaluatedValue = expression
 				.visit(this, state);
@@ -242,19 +242,19 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLObject> visitNoOperation(
-			final ASTNoOperationNode astBlank, final SMPLEnvironment state)
+	public SMPLValue<SMPLObject> visitNoOp(
+			final ASTNoOp astBlank, final SMPLEnvironment state)
 			throws ASTException {
 		return new SMPLValue<SMPLObject>(new SMPLObject("no_op"));
 	}
 
 	@Override
 	public SMPLValue<SMPLNumber> visitAdd(
-			final ASTAddExpression astAddExpression, final SMPLEnvironment state)
+			final ASTAddExp astAddExpression, final SMPLEnvironment state)
 			throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astAddExpression.getOperand1();
-		final ASTExpression<?> astOperand2 = astAddExpression.getOperand2();
+		final ASTExp<?> astOperand1 = astAddExpression.getOperand1();
+		final ASTExp<?> astOperand2 = astAddExpression.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
 				this, state);
@@ -311,7 +311,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 			final ASTNegationExpression astNegationExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astNegationExpression.getOperand();
+		final ASTExp<?> astOperand1 = astNegationExpression.getOperand();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
 				this, state);
@@ -354,8 +354,8 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 			final ASTMinusExpression astMinusExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astMinusExpression.getOperand1();
-		final ASTExpression<?> astOperand2 = astMinusExpression.getOperand2();
+		final ASTExp<?> astOperand1 = astMinusExpression.getOperand1();
+		final ASTExp<?> astOperand2 = astMinusExpression.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
 				this, state);
@@ -412,9 +412,9 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 			final ASTMultiplyExpression astMultiplyExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astMultiplyExpression
+		final ASTExp<?> astOperand1 = astMultiplyExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astMultiplyExpression
+		final ASTExp<?> astOperand2 = astMultiplyExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -472,8 +472,8 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 			final ASTDivideExpression astDivideExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astDivideExpression.getOperand1();
-		final ASTExpression<?> astOperand2 = astDivideExpression.getOperand2();
+		final ASTExp<?> astOperand1 = astDivideExpression.getOperand1();
+		final ASTExp<?> astOperand2 = astDivideExpression.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
 				this, state);
@@ -530,8 +530,8 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 			final ASTModulusExpression astModulusExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astModulusExpression.getOperand1();
-		final ASTExpression<?> astOperand2 = astModulusExpression.getOperand2();
+		final ASTExp<?> astOperand1 = astModulusExpression.getOperand1();
+		final ASTExp<?> astOperand2 = astModulusExpression.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
 				this, state);
@@ -571,12 +571,12 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLInteger> visitBitwiseAnd(
-			final ASTBitwiseAndExpression astBitwiseAndExpression,
+			final ASTBitwiseAndExp astBitwiseAndExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astBitwiseAndExpression
+		final ASTExp<?> astOperand1 = astBitwiseAndExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astBitwiseAndExpression
+		final ASTExp<?> astOperand2 = astBitwiseAndExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -615,12 +615,12 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLInteger> visitBitwiseOr(
-			final ASTBitwiseOrExpression astBitwiseOrExpression,
+			final ASTBitwiseOrExp astBitwiseOrExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astBitwiseOrExpression
+		final ASTExp<?> astOperand1 = astBitwiseOrExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astBitwiseOrExpression
+		final ASTExp<?> astOperand2 = astBitwiseOrExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -659,10 +659,10 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLInteger> visitBitwiseComplement(
-			final ASTBitwiseComplementExpression astBitwiseComplementExpression,
+			final ASTComplementExp astBitwiseComplementExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astBitwiseComplementExpression
+		final ASTExp<?> astOperand1 = astBitwiseComplementExpression
 				.getOperand();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -691,13 +691,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLBoolean> visitRelationalEqual(
-			final ASTRelationalEqualExpression astRelationalEqualExpression,
+	public SMPLValue<SMPLBoolean> visitEqual(
+			final ASTEqualExp astRelationalEqualExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astRelationalEqualExpression
+		final ASTExp<?> astOperand1 = astRelationalEqualExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astRelationalEqualExpression
+		final ASTExp<?> astOperand2 = astRelationalEqualExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -742,13 +742,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLBoolean> visitRelationalLessThan(
-			final ASTRelationalLessThanExpression astRelationalLessThanExpression,
+	public SMPLValue<SMPLBoolean> visitLessThan(
+			final ASTLessThanExp astRelationalLessThanExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astRelationalLessThanExpression
+		final ASTExp<?> astOperand1 = astRelationalLessThanExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astRelationalLessThanExpression
+		final ASTExp<?> astOperand2 = astRelationalLessThanExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -785,13 +785,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLBoolean> visitRelationalGreaterThan(
-			final ASTRelationalGreaterThanExpression astRelationalGreaterThanExpression,
+	public SMPLValue<SMPLBoolean> visitGreaterThan(
+			final ASTGreaterThanExp astRelationalGreaterThanExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astRelationalGreaterThanExpression
+		final ASTExp<?> astOperand1 = astRelationalGreaterThanExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astRelationalGreaterThanExpression
+		final ASTExp<?> astOperand2 = astRelationalGreaterThanExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -827,13 +827,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLBoolean> visitRelationalLessThanOrEqual(
-			final ASTRelationalLessThanOrEqualExpression astRelationalLessThanOrEqualExpression,
+	public SMPLValue<SMPLBoolean> visitLessThanOrEqual(
+			final ASTLessThanOrEqualExp astRelationalLessThanOrEqualExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astRelationalLessThanOrEqualExpression
+		final ASTExp<?> astOperand1 = astRelationalLessThanOrEqualExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astRelationalLessThanOrEqualExpression
+		final ASTExp<?> astOperand2 = astRelationalLessThanOrEqualExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -871,13 +871,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLBoolean> visitRelationalGreaterThanOrEqual(
-			final ASTRelationalGreaterThanOrEqualExpression astRelationalGreaterThanOrEqualExpression,
+	public SMPLValue<SMPLBoolean> visitGreaterThanOrEqual(
+			final ASTGreaterThanOrEqualExp astRelationalGreaterThanOrEqualExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astRelationalGreaterThanOrEqualExpression
+		final ASTExp<?> astOperand1 = astRelationalGreaterThanOrEqualExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astRelationalGreaterThanOrEqualExpression
+		final ASTExp<?> astOperand2 = astRelationalGreaterThanOrEqualExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -915,13 +915,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLBoolean> visitRelationalNotEqual(
-			final ASTRelationalNotEqualExpression astRelationalNotEqualExpression,
+	public SMPLValue<SMPLBoolean> visitNotEqual(
+			final ASTNotEqualExp astRelationalNotEqualExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astRelationalNotEqualExpression
+		final ASTExp<?> astOperand1 = astRelationalNotEqualExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astRelationalNotEqualExpression
+		final ASTExp<?> astOperand2 = astRelationalNotEqualExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -958,7 +958,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLPair> visitListCreation(
-			final ASTListCreationExpression astListCreationExpression,
+			final ASTListCreationExp astListCreationExpression,
 			final SMPLEnvironment state) throws ASTException {
 		// THe list construct is equivalent to calling the list function with
 		// the items as input.
@@ -966,29 +966,29 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 		// whatever the function evaluates t0.
 		// To facilitate this, I will simulate the list function being called.
 
-		final ASTIdentifier listFunctionIdentifier = new ASTIdentifier("list");
+		final ASTIdent listFunctionIdentifier = new ASTIdent("list");
 		final ASTArgumentList listFunctionArgs = new ASTArgumentList();
 
 		final ASTExpressionList listElements = astListCreationExpression
 				.getListExpressions();
 
-		for (final ASTExpression<?> exp : listElements.getExpressions())
+		for (final ASTExp<?> exp : listElements.getExpressions())
 			listFunctionArgs.add(exp);
 
-		final ASTCallProcedureExpression createListProcedure = new ASTCallProcedureExpression(
+		final ASTCallProcedureExp createListProcedure = new ASTCallProcedureExp(
 				listFunctionIdentifier, listFunctionArgs);
 
 		return createListProcedure.visit(this, state);
 	}
 
 	@Override
-	public SMPLValue<SMPLPair> visitListConcatenationExpression(
-			final ASTListConcatExpression astRelationalListConcatExpression,
+	public SMPLValue<SMPLPair> visitListConcatExp(
+			final ASTListConcatExp astRelationalListConcatExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astRelationalListConcatExpression
+		final ASTExp<?> astOperand1 = astRelationalListConcatExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astRelationalListConcatExpression
+		final ASTExp<?> astOperand2 = astRelationalListConcatExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -1028,12 +1028,12 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLBoolean> visitLogicalAnd(
-			final ASTLogicalAndExpression astBitwiseAndExpression,
+			final ASTLogicalAndExp astBitwiseAndExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astBitwiseAndExpression
+		final ASTExp<?> astOperand1 = astBitwiseAndExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astBitwiseAndExpression
+		final ASTExp<?> astOperand2 = astBitwiseAndExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -1072,10 +1072,10 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLBoolean> visitLogicalNot(
-			final ASTLogicalNotExpression astLogicalNotExpression,
+			final ASTLogicalNotExp astLogicalNotExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astLogicalNotExpression
+		final ASTExp<?> astOperand1 = astLogicalNotExpression
 				.getOperand();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -1105,12 +1105,12 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLBoolean> visitLogicalOr(
-			final ASTLogicalOrExpression astLogicalOrExpression,
+			final ASTLogicalOrExp astLogicalOrExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astOperand1 = astLogicalOrExpression
+		final ASTExp<?> astOperand1 = astLogicalOrExpression
 				.getOperand1();
-		final ASTExpression<?> astOperand2 = astLogicalOrExpression
+		final ASTExp<?> astOperand2 = astLogicalOrExpression
 				.getOperand2();
 
 		final SMPLValue<SMPLObject> operand1EvaluatedValue = astOperand1.visit(
@@ -1149,13 +1149,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitVectorIndexAccess(
-			final ASTVectorIndexAccessExpression astVectorIndexAccessExpression,
+			final ASTVectorIndexAccessExp astVectorIndexAccessExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astVector = astVectorIndexAccessExpression
+		final ASTExp<?> astVector = astVectorIndexAccessExpression
 				.getVectorExpression();
 
-		final ASTExpression<?> astVectorIndex = astVectorIndexAccessExpression
+		final ASTExp<?> astVectorIndex = astVectorIndexAccessExpression
 				.getIndexExpression();
 
 		final SMPLValue<SMPLObject> vectorEvaluatedValue = astVector.visit(
@@ -1194,7 +1194,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLVector> visitVectorCreation(
-			final ASTVectorCreationExpression astVectorCreationExpression,
+			final ASTVectorCreationExp astVectorCreationExpression,
 			final SMPLEnvironment state) throws ASTException {
 		final ASTExpressionList astVectorExpressions = astVectorCreationExpression
 				.getVectorExpressions();
@@ -1240,11 +1240,11 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLSubVectorExpression> visitVectorComprehension(
-			final ASTVectorComprehensionExpression astVectorComprehensionExpression,
+			final ASTVectorComprehensionExp astVectorComprehensionExpression,
 			final SMPLEnvironment state) throws ASTException {
-		final ASTExpression<?> astSubVectorSize = astVectorComprehensionExpression
+		final ASTExp<?> astSubVectorSize = astVectorComprehensionExpression
 				.getVectorSizeExpression();
-		final ASTExpression<?> astSubVectorFunction = astVectorComprehensionExpression
+		final ASTExp<?> astSubVectorFunction = astVectorComprehensionExpression
 				.getElementProcedureExpression();
 
 		final SMPLValue<SMPLObject> subVectorSizeEvaluatedValue = astSubVectorSize
@@ -1286,7 +1286,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 		final ArrayList<SMPLValue<?>> expressionList = new ArrayList<SMPLValue<?>>(
 				astListCreationExpression.numExpressions());
-		for (final ASTExpression<?> astExp : astListCreationExpression
+		for (final ASTExp<?> astExp : astListCreationExpression
 				.getExpressions()) {
 			final SMPLValue<SMPLObject> expEvaluatedValue = astExp.visit(this,
 					state);
@@ -1298,11 +1298,11 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLProcedure> visitCreateProcedure(
-			final ASTCreateProcedureExpression astCreateProcedureExpression,
+			final ASTCreateProcedureExp astCreateProcedureExpression,
 			final SMPLEnvironment state) throws ASTException {
 		final ASTIdentifierList astFunctionParameters = astCreateProcedureExpression
 				.getParameters();
-		final ASTExpression<?> astFunctionBody = astCreateProcedureExpression
+		final ASTExp<?> astFunctionBody = astCreateProcedureExpression
 				.getBodyExpression();
 
 		final SMPLValue<ArrayList<String>> functionParametersEvaluatedValue = astFunctionParameters
@@ -1319,15 +1319,15 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLProcedure> visitCreateVariableAriyProcedure(
-			final ASTCreateVariableAriyProcedureExpression astCreateVariableAriyProcedureExpression,
+	public SMPLValue<SMPLProcedure> visitCreateVariableArityProcedure(
+			final ASTCreateVariableArityProcedureExp astCreateVariableAriyProcedureExpression,
 			final SMPLEnvironment state) throws ASTException {
 		final ASTIdentifierList astFunctionParameters = astCreateVariableAriyProcedureExpression
 				.getParameters();
-		final ASTExpression<?> astFunctionBody = astCreateVariableAriyProcedureExpression
+		final ASTExp<?> astFunctionBody = astCreateVariableAriyProcedureExpression
 				.getBodyExpression();
 
-		final ASTIdentifier astVArgIdentifier = astCreateVariableAriyProcedureExpression
+		final ASTIdent astVArgIdentifier = astCreateVariableAriyProcedureExpression
 				.getVArgIdentifier();
 		final SMPLValue<ArrayList<String>> functionParametersEvaluatedValue = astFunctionParameters
 				.visit(this, state);
@@ -1344,13 +1344,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLProcedure> visitCreateOpenAriyProcedure(
-			final ASTCreateOpenAriyProcedureExpression astCreateOpenAriyProcedureExpression,
+	public SMPLValue<SMPLProcedure> visitCreateOpenArityProcedure(
+			final ASTCreateOpenArityProcedureExp astCreateOpenAriyProcedureExpression,
 			final SMPLEnvironment state) throws ASTException {
-		final ASTExpression<?> astFunctionBody = astCreateOpenAriyProcedureExpression
+		final ASTExp<?> astFunctionBody = astCreateOpenAriyProcedureExpression
 				.getBodyExpression();
 
-		final ASTIdentifier astVArgIdentifier = astCreateOpenAriyProcedureExpression
+		final ASTIdent astVArgIdentifier = astCreateOpenAriyProcedureExpression
 				.getVArgIdentifier();
 
 		final SMPLProcedure smplProcedure = new SMPLProcedure(astFunctionBody,
@@ -1363,11 +1363,11 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitSpecialCallProcedure(
-			final ASTSpecialCallProcedureExpression astSpecialCallProcedureExpression,
+			final ASTSpecialCallProcedureExp astSpecialCallProcedureExpression,
 			final SMPLEnvironment state) throws ASTException {
-		final ASTExpression<?> astProcedureExpression = astSpecialCallProcedureExpression
+		final ASTExp<?> astProcedureExpression = astSpecialCallProcedureExpression
 				.getProcedureExpression();
-		final ASTExpression<?> astArgListExpression = astSpecialCallProcedureExpression
+		final ASTExp<?> astArgListExpression = astSpecialCallProcedureExpression
 				.getArgListExpression();
 
 		final SMPLValue<SMPLObject> smplProcedureEvaluatedValue = astProcedureExpression
@@ -1407,9 +1407,9 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLLazyExpression> visitLazyEvaluation(
-			final ASTLazyEvaluationExpression astLazyEvaluationExpression,
+			final ASTLazyEvaluationExp astLazyEvaluationExpression,
 			final SMPLEnvironment state) throws ASTException {
-		final ASTExpression<?> astExpressionTOEvaluateLazily = astLazyEvaluationExpression
+		final ASTExp<?> astExpressionTOEvaluateLazily = astLazyEvaluationExpression
 				.getExpression();
 
 		final SMPLLazyExpression smplLazyExpression = new SMPLLazyExpression(
@@ -1422,7 +1422,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 			final ASTAliasDefinitionList astAliasDefinitionList,
 			final SMPLEnvironment state) throws ASTException {
 		final ArrayList<SMPLValue<?>> definitionResultList = new ArrayList<SMPLValue<?>>();
-		for (final ASTAliasDefinition def : astAliasDefinitionList
+		for (final ASTAliasDefn def : astAliasDefinitionList
 				.getAliasDefinitions()) {
 			final SMPLValue<?> defResult = def.visit(this, state);
 			definitionResultList.add(defResult);
@@ -1433,7 +1433,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitLetAliasDefinitionExpansion(
-			final ASTLetAliasDefinitionExpansionExpression astBodyAliasDefinitionExpansionExpression,
+			final ASTLetAliasDefinitionExpansionExp astBodyAliasDefinitionExpansionExpression,
 			final SMPLEnvironment state) throws ASTException {
 		final SMPLEnvironment newEnvironment = new SMPLEnvironment(state, state);
 
@@ -1446,11 +1446,11 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitAliasAssignment(
-			final ASTAliasAssignment astAliasAssignment,
+			final ASTAliasAssign astAliasAssignment,
 			final SMPLEnvironment state) throws ASTException {
-		final ASTIdentifier astIdentifier = astAliasAssignment
+		final ASTIdent astIdentifier = astAliasAssignment
 				.getIdentifierNode();
-		final ASTExpression<?> astExpression = astAliasAssignment
+		final ASTExp<?> astExpression = astAliasAssignment
 				.getExpressionNode();
 
 		final String identifierName = astIdentifier.getIdentifierName();
@@ -1477,13 +1477,13 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 		final ASTIdentifierList identifierList = astMultipleAliasAssignment
 				.getIdentifierList();
 
-		final ASTExpression<?> astExpression = astMultipleAliasAssignment
+		final ASTExp<?> astExpression = astMultipleAliasAssignment
 				.getExpressionNode();
 
 		final SMPLValue<SMPLObject> smplExpression = astExpression.visit(this,
 				state);
 
-		for (final ASTIdentifier astIdentifier : identifierList
+		for (final ASTIdent astIdentifier : identifierList
 				.getIdentifiers()) {
 			if (astIdentifier.isReference())
 				throw new SMPLException(
@@ -1504,9 +1504,9 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitIfThenElse(
-			final ASTIfThenElseExpression astIfThenElseExpression,
+			final ASTIfThenElseExp astIfThenElseExpression,
 			final SMPLEnvironment state) throws ASTException {
-		final ASTExpression<?> astConditionExpression = astIfThenElseExpression
+		final ASTExp<?> astConditionExpression = astIfThenElseExpression
 				.getConditionExpression();
 		final ASTStatement<?> astConsequenceExpression = astIfThenElseExpression
 				.getConsequenceExpression();
@@ -1541,7 +1541,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitCaseClasue(
-			final ASTCaseClasue astCaseClasue, final SMPLEnvironment state)
+			final ASTCaseClause astCaseClasue, final SMPLEnvironment state)
 			throws ASTException {
 		return new SMPLValue<SMPLObject>(new SMPLObject("case_clause"));
 	}
@@ -1555,14 +1555,14 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitCase(
-			final ASTCaseExpression astCaseExpression,
+			final ASTCaseExp astCaseExpression,
 			final SMPLEnvironment state) throws ASTException {
 		SMPLValue<SMPLObject> resultValue = null;
-		for (final ASTCaseClasue astCaseClause : astCaseExpression
+		for (final ASTCaseClause astCaseClause : astCaseExpression
 				.getClauseList().getClauses()) {
-			final ASTExpression<?> astClausePredicate = astCaseClause
+			final ASTExp<?> astClausePredicate = astCaseClause
 					.getPredicateExpression();
-			final ASTExpression<?> astClauseExpression = astCaseClause
+			final ASTExp<?> astClauseExpression = astCaseClause
 					.getClauseExpresion();
 
 			final SMPLValue<SMPLObject> smplPredicateEvaluatedValue = astClausePredicate
@@ -1592,8 +1592,8 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLObject> visitStatementSequenceExpression(
-			final ASTStatementSequenceExpression astExpressionSequence,
+	public SMPLValue<SMPLObject> visitStatementSequenceExp(
+			final ASTStatementSequenceExp astExpressionSequence,
 			final SMPLEnvironment state) throws ASTException {
 		final SMPLValue<SMPLObject> ret = astExpressionSequence.getStatements()
 				.visit(this, state);
@@ -1602,9 +1602,9 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitPrint(
-			final ASTPrintExpression astPrintExpression,
+			final ASTPrintExp astPrintExpression,
 			final SMPLEnvironment state) throws ASTException {
-		final ASTExpression<?> astExpressionToPrint = astPrintExpression
+		final ASTExp<?> astExpressionToPrint = astPrintExpression
 				.getExpression();
 		final SMPLValue<SMPLObject> smplExpressionToPrintEvaluatedValue = astExpressionToPrint
 				.visit(this, state);
@@ -1618,9 +1618,9 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitPrintLn(
-			final ASTPrintLnExpression astPrintLnExpression,
+			final ASTPrintLnExp astPrintLnExpression,
 			final SMPLEnvironment state) throws ASTException {
-		final ASTExpression<?> astExpressionToPrint = astPrintLnExpression
+		final ASTExp<?> astExpressionToPrint = astPrintLnExpression
 				.getExpression();
 		final SMPLValue<SMPLObject> smplExpressionToPrintEvaluatedValue = astExpressionToPrint
 				.visit(this, state);
@@ -1634,7 +1634,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLString> visitReadString(
-			final ASTReadStringExpression astReadStringExpression,
+			final ASTReadStringExp astReadStringExpression,
 			final SMPLEnvironment state) throws ASTException {
 
 		final Scanner scan = new Scanner(System.in);
@@ -1647,7 +1647,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLInteger> visitReadInteger(
-			final ASTReadIntegerExpression astReadIntegerExpression,
+			final ASTReadIntegerExp astReadIntegerExpression,
 			final SMPLEnvironment state) throws ASTException {
 		final Scanner scan = new Scanner(System.in);
 		final BigInteger integerRead = scan.nextBigInteger();
@@ -1663,7 +1663,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 			final SMPLEnvironment state) throws ASTException {
 		final ArrayList<String> identifiers = new ArrayList<String>();
 
-		for (final ASTIdentifier iden : astIdentifierList.getIdentifiers())
+		for (final ASTIdent iden : astIdentifierList.getIdentifiers())
 			identifiers.add(iden.getIdentifierName());
 
 		return new SMPLValue<ArrayList<String>>(identifiers);
@@ -1671,7 +1671,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLBoolean> visitBooleanConstant(
-			final ASTBooleanConstantExpression astBooleanConstantExpression,
+			final ASTBooleanConstantExp astBooleanConstantExpression,
 			final SMPLEnvironment state) throws ASTException {
 
 		final SMPLBoolean smplBoolean = new SMPLBoolean(
@@ -1686,7 +1686,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 			throws ASTException {
 		final ArrayList<SMPLValue> arguments = new ArrayList<SMPLValue>();
 
-		for (final ASTExpression<?> astExp : astParameterList.getExpressions()) {
+		for (final ASTExp<?> astExp : astParameterList.getExpressions()) {
 			final SMPLValue<SMPLObject> smplExp = astExp.visit(this, state);
 			arguments.add(smplExp);
 		}
@@ -1695,10 +1695,10 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 
 	@Override
 	public SMPLValue<SMPLObject> visitCallProcedure(
-			final ASTCallProcedureExpression astCallProcedureExpression,
+			final ASTCallProcedureExp astCallProcedureExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		final ASTExpression<?> astFunctionExpression = astCallProcedureExpression
+		final ASTExp<?> astFunctionExpression = astCallProcedureExpression
 				.getIdentifier();
 
 		final SMPLValue<ArrayList<SMPLValue<SMPLObject>>> smplParametersEvaluatedValue = astCallProcedureExpression
@@ -1732,11 +1732,11 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue visitDynamicBindingExpression(
-			final ASTDynamicBindingsExpression astDynamicIdentifiersExpression,
+	public SMPLValue visitDynamicBindingExp(
+			final ASTDynamicBindingsExp astDynamicIdentifiersExpression,
 			final SMPLEnvironment state) throws ASTException {
 
-		for (final ASTIdentifier iden : astDynamicIdentifiersExpression
+		for (final ASTIdent iden : astDynamicIdentifiersExpression
 				.getDynamicIdentifiers().getIdentifiers())
 			if (iden.isReference())
 				throw new SMPLException(
@@ -1749,7 +1749,7 @@ public class SMPLEvaluator implements Visitor<SMPLEnvironment, SMPLValue> {
 	}
 
 	@Override
-	public SMPLValue<SMPLObject> visitNiiList(final ASTNillList astNill,
+	public SMPLValue<SMPLObject> visitNilList(final ASTNilList astNill,
 			final SMPLEnvironment state) throws ASTException {
 		return new SMPLValue<SMPLObject>(new SMPLNillObject());
 	}

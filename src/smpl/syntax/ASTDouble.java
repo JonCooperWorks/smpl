@@ -8,7 +8,7 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTDouble extends ASTExpression<ASTNoOperationNode> {
+public class ASTDouble extends ASTExp<ASTNoOp> {
 
 	private final String mMatchedString;
 

@@ -8,10 +8,10 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTMultipleAliasAssignment extends ASTExpression<ASTNode<?>> {
+public class ASTMultipleAliasAssignment extends ASTExp<ASTNode<?>> {
 
 	public ASTMultipleAliasAssignment(final ASTIdentifierList identifierList,
-			final ASTExpression<?> exp) {
+			final ASTExp<?> exp) {
 		super("multiple_alias_assignment", identifierList, exp);
 	}
 
@@ -19,8 +19,8 @@ public class ASTMultipleAliasAssignment extends ASTExpression<ASTNode<?>> {
 		return (ASTIdentifierList) getChild(0);
 	}
 
-	public ASTExpression<?> getExpressionNode() {
-		return (ASTExpression<?>) getChild(1);
+	public ASTExp<?> getExpressionNode() {
+		return (ASTExp<?>) getChild(1);
 	}
 
 	@Override

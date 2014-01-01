@@ -10,7 +10,7 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTCharacter extends ASTExpression<ASTNoOperationNode> {
+public class ASTCharacter extends ASTExp<ASTNoOp> {
 	private final Character mInternalValue;
 
 	private final String mMatchedString;

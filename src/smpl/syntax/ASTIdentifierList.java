@@ -8,27 +8,27 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTIdentifierList extends ASTNode<ASTIdentifier> {
+public class ASTIdentifierList extends ASTNode<ASTIdent> {
 
     public ASTIdentifierList() {
 	super("identifier_list");
     }
 
-    public ASTIdentifierList(final ASTIdentifier... exp) {
+    public ASTIdentifierList(final ASTIdent... exp) {
 	super("identifier_list", exp);
     }
 
     /* Chainable Function */
-    public ASTIdentifierList add(final ASTIdentifier exp) {
+    public ASTIdentifierList add(final ASTIdent exp) {
 	addChild(exp);
 	return this;
     }
 
-    public ASTIdentifier getIdentifier(final int i) {
+    public ASTIdent getIdentifier(final int i) {
 	return getChild(i);
     }
 
-    public Iterable<ASTIdentifier> getIdentifiers() {
+    public Iterable<ASTIdent> getIdentifiers() {
 	return getChildren();
     }
 

@@ -15,8 +15,8 @@ import smpl.semantics.SMPLValue.Objects.SMPLObject;
 import smpl.semantics.SMPLValue.Objects.SMPLString;
 import smpl.semantics.SMPLValue.Objects.SMPLValue;
 import smpl.syntax.ASTException;
-import smpl.syntax.ASTIdentifier;
-import smpl.syntax.ASTNoOperationNode;
+import smpl.syntax.ASTIdent;
+import smpl.syntax.ASTNoOp;
 
 /**
  * 
@@ -25,8 +25,8 @@ public class SMPLSubStrNativeFunction extends SMPLNativeProcedure {
 
     public SMPLSubStrNativeFunction() {
 	super(new ArrayList<String>(Arrays.asList(new String[] { "string",
-		"start", "stop" })), new ASTNoOperationNode(),
-		new ASTIdentifier("expressionList"), Flags.None);
+		"start", "stop" })), new ASTNoOp(),
+		new ASTIdent("expressionList"), Flags.None);
     }
 
     @Override

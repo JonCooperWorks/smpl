@@ -16,8 +16,8 @@ import smpl.semantics.SMPLValue.Objects.SMPLObject;
 import smpl.semantics.SMPLValue.Objects.SMPLValue;
 import smpl.semantics.SMPLValue.Objects.SMPLVector;
 import smpl.syntax.ASTException;
-import smpl.syntax.ASTIdentifier;
-import smpl.syntax.ASTNoOperationNode;
+import smpl.syntax.ASTIdent;
+import smpl.syntax.ASTNoOp;
 
 /**
  * 
@@ -26,7 +26,7 @@ public class SMPLSizeNativeFunction extends SMPLNativeProcedure {
 
     public SMPLSizeNativeFunction() {
 	super(new ArrayList<String>(Arrays.asList(new String[] { "vector" })),
-		new ASTNoOperationNode(), new ASTIdentifier("expressionList"),
+		new ASTNoOp(), new ASTIdent("expressionList"),
 		Flags.None);
     }
 

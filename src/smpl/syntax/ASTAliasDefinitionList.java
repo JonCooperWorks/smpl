@@ -8,27 +8,27 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTAliasDefinitionList extends ASTNode<ASTAliasDefinition> {
+public class ASTAliasDefinitionList extends ASTNode<ASTAliasDefn> {
 
 	public ASTAliasDefinitionList() {
 		super("alias_definition_list");
 	}
 
-	public ASTAliasDefinitionList(final ASTAliasDefinition... exp) {
+	public ASTAliasDefinitionList(final ASTAliasDefn... exp) {
 		super("identifier_list", exp);
 	}
 
 	/* Chainable Function */
-	public ASTAliasDefinitionList add(final ASTAliasDefinition exp) {
+	public ASTAliasDefinitionList add(final ASTAliasDefn exp) {
 		addChild(exp);
 		return this;
 	}
 
-	public ASTAliasDefinition getAliasDefinition(final int i) {
+	public ASTAliasDefn getAliasDefinition(final int i) {
 		return getChild(i);
 	}
 
-	public Iterable<ASTAliasDefinition> getAliasDefinitions() {
+	public Iterable<ASTAliasDefn> getAliasDefinitions() {
 		return getChildren();
 	}
 

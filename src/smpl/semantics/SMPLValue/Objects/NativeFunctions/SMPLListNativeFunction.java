@@ -13,8 +13,8 @@ import smpl.semantics.SMPLValue.Objects.SMPLNillObject;
 import smpl.semantics.SMPLValue.Objects.SMPLObject;
 import smpl.semantics.SMPLValue.Objects.SMPLValue;
 import smpl.syntax.ASTException;
-import smpl.syntax.ASTIdentifier;
-import smpl.syntax.ASTNoOperationNode;
+import smpl.syntax.ASTIdent;
+import smpl.syntax.ASTNoOp;
 
 /**
  * 
@@ -22,8 +22,8 @@ import smpl.syntax.ASTNoOperationNode;
 public class SMPLListNativeFunction extends SMPLNativeProcedure {
 
     public SMPLListNativeFunction() {
-	super(new ArrayList<String>(), new ASTNoOperationNode(),
-		new ASTIdentifier("expressionList"), Flags.VariableArity);
+	super(new ArrayList<String>(), new ASTNoOp(),
+		new ASTIdent("expressionList"), Flags.VariableArity);
     }
 
     @Override

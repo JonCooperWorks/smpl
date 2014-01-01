@@ -13,8 +13,8 @@ import smpl.semantics.SMPLValue.Objects.SMPLNativeProcedure;
 import smpl.semantics.SMPLValue.Objects.SMPLObject;
 import smpl.semantics.SMPLValue.Objects.SMPLValue;
 import smpl.syntax.ASTException;
-import smpl.syntax.ASTIdentifier;
-import smpl.syntax.ASTNoOperationNode;
+import smpl.syntax.ASTIdent;
+import smpl.syntax.ASTNoOp;
 
 /**
  * 
@@ -25,7 +25,7 @@ public class SMPLEqualNativeFunction extends SMPLNativeProcedure {
 	super(
 		new ArrayList<String>(
 			Arrays.asList(new String[] { "e1", "e2" })),
-		new ASTNoOperationNode(), new ASTIdentifier("expressionList"),
+		new ASTNoOp(), new ASTIdent("expressionList"),
 		Flags.None);
     }
 

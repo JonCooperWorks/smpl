@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * 
  */
 public abstract class ASTListExpression<ChildrenType extends ASTNode<?>>
-		extends ASTExpression<ChildrenType> {
+		extends ASTExp<ChildrenType> {
 
 	public ASTListExpression(final String nm) {
 		super(nm);

@@ -6,17 +6,17 @@ package smpl.semantics.SMPLValue.Objects;
 import smpl.semantics.SMPLValue.SMPLEnvironment;
 import smpl.semantics.SMPLValue.SMPLEvaluator;
 import smpl.syntax.ASTException;
-import smpl.syntax.ASTExpression;
+import smpl.syntax.ASTExp;
 
 /**
  * 
  */
 public class SMPLLazyExpression extends SMPLObject {
-	private final ASTExpression<?> mExpressionToEvaluate;
+	private final ASTExp<?> mExpressionToEvaluate;
 
 	private SMPLObject mChachedValue;
 
-	public SMPLLazyExpression(final ASTExpression<?> exp) {
+	public SMPLLazyExpression(final ASTExp<?> exp) {
 		super("lazy");
 		mExpressionToEvaluate = exp;
 	}

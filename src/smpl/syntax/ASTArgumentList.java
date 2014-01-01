@@ -8,27 +8,27 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTArgumentList extends ASTStatement<ASTExpression<?>> {
+public class ASTArgumentList extends ASTStatement<ASTExp<?>> {
 
     public ASTArgumentList() {
 	super("parameter_list");
     }
 
-    public ASTArgumentList(final ASTExpression<?>... exp) {
+    public ASTArgumentList(final ASTExp<?>... exp) {
 	super("parameter_list", exp);
     }
 
     /* Chainable Function */
-    public ASTArgumentList add(final ASTExpression<?> exp) {
+    public ASTArgumentList add(final ASTExp<?> exp) {
 	addChild(exp);
 	return this;
     }
 
-    public ASTExpression<?> getExpression(final int i) {
+    public ASTExp<?> getExpression(final int i) {
 	return getChild(i);
     }
 
-    public Iterable<ASTExpression<?>> getExpressions() {
+    public Iterable<ASTExp<?>> getExpressions() {
 	return getChildren();
     }
 

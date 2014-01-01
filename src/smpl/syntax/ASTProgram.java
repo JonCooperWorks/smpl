@@ -8,14 +8,14 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTProgram extends ASTNode<ASTStatementSequence> {
+public class ASTProgram extends ASTNode<ASTStmtSequence> {
 	/**
 	 * Create a new program instance from a sequence of statements.
 	 * 
 	 * @param seq
 	 *            The sequence of statements forming the program.
 	 */
-	public ASTProgram(final ASTStatementSequence seq) {
+	public ASTProgram(final ASTStmtSequence seq) {
 		super("program", seq);
 	}
 
@@ -23,7 +23,7 @@ public class ASTProgram extends ASTNode<ASTStatementSequence> {
 	 * 
 	 * @return The sequence of statements making up the body of this program.
 	 */
-	public ASTStatementSequence getBody() {
+	public ASTStmtSequence getBody() {
 		return getChild(0);
 	}
 

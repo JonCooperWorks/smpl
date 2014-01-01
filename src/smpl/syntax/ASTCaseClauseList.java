@@ -8,27 +8,27 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTCaseClauseList extends ASTNode<ASTCaseClasue> {
+public class ASTCaseClauseList extends ASTNode<ASTCaseClause> {
 
     public ASTCaseClauseList() {
 	super("case_clause_list");
     }
 
-    public ASTCaseClauseList(final ASTCaseClasue... exp) {
+    public ASTCaseClauseList(final ASTCaseClause... exp) {
 	super("case_clause_list", exp);
     }
 
     /* Chainable Function */
-    public ASTCaseClauseList add(final ASTCaseClasue exp) {
+    public ASTCaseClauseList add(final ASTCaseClause exp) {
 	addChild(exp);
 	return this;
     }
 
-    public ASTCaseClasue getClause(final int i) {
+    public ASTCaseClause getClause(final int i) {
 	return getChild(i);
     }
 
-    public Iterable<ASTCaseClasue> getClauses() {
+    public Iterable<ASTCaseClause> getClauses() {
 	return getChildren();
     }
 

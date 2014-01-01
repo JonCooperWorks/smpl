@@ -8,7 +8,7 @@ import smpl.semantics.Visitor;
 /**
  * 
  */
-public class ASTInteger extends ASTExpression<ASTNoOperationNode> {
+public class ASTInteger extends ASTExp<ASTNoOp> {
 
 	private final String mMatchedString;
 
